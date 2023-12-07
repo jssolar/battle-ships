@@ -108,4 +108,4 @@ function addShipPiece(ship) {
 // addShipPiece();
 ships.forEach((ship) => addShipPiece(ship));
 
-// Drag player ships
+//------< Drag player ships >------------------>
