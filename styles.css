@@ -79,3 +79,15 @@
   box-sizing: border-box;
   
 }
+
+.hover{
+  background-color: black;
+}
+
+.boom{
+  background: red;
+}
+
+.empty{
+  background-color: grey;
+}
