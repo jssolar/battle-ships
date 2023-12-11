@@ -7,17 +7,15 @@ const turnDisplay = document.querySelector("#turn-display");
 
 //-------Options Choosing----------->
 let angle = 0;
+
+let allBoardBlocks;
+
 function flip() {
-  // console.log(Array.from(optionContainer.children))
-  // if( angle === 0 ){
-  //   angle = 90
-  // }else {
-  //   angle = 0
-  // }
+
   angle = angle === 0 ? 90 : 0;
-  const optionShips = Array.from(optionContainer.children);
-  optionShips.forEach(
-    (optionShip) => (optionShip.style.transform = `rotate(${angle}deg)`)
+  
+  let optionShips = Array.from(optionContainer.children);
+      optionShips.forEach(optionShip => (optionShip.style.transform = `rotate(${angle}deg)`)
   );
 }
 flipButton.addEventListener("click", flip);
@@ -31,7 +29,7 @@ function createBoard(color, user) {
   gameBoardContainer.id = user;
 
   for (let i = 0; i < width * width; i++) {
-    const block = document.createElement("div");
+    let block = document.createElement("div");
     block.classList.add("block");
     block.id = i;
     gameBoardContainer.append(block);
@@ -50,14 +48,15 @@ class Ship {
   }
 }
 
-const destroyer = new Ship("destroyer", 2);
-const submarine = new Ship("submarine", 3);
-const cruiser = new Ship("cruiser", 4);
-const battleship = new Ship("battleship", 4);
-const carrier = new Ship("carrier", 5);
+let destroyer = new Ship("destroyer", 2);
+let submarine = new Ship("submarine", 3);
+let cruiser = new Ship("cruiser", 4);
+let battleship = new Ship("battleship", 4);
+let carrier = new Ship("carrier", 5);
 
-const ships = [destroyer, submarine, cruiser, battleship, carrier];
+let ships = [destroyer, submarine, cruiser, battleship, carrier];
 let notDropped;
+// let allBoardBlocks
 
 function getValidity(allBoardBlocks, ship, isHorizontal, startIndex) {
   let validStart = isHorizontal
@@ -91,22 +90,22 @@ function getValidity(allBoardBlocks, ship, isHorizontal, startIndex) {
     );
   }
 
-  const notTaken = shipBlocks.every(
+  let notTaken = shipBlocks.every(
     (shipBlock) => !shipBlock.classList.contains("taken")
   );
   return { shipBlocks, valid, notTaken };
 }
 
 function addShipPiece(user, ship, startId) {
-  const allBoardBlocks = document.querySelectorAll(`#${user} div`);
+  let allBoardBlocks = document.querySelectorAll(`#${user} div`);
   let randomBoolean = Math.random() < 0.5;
   let isHorizontal = user === "player" ? angle === 0 : randomBoolean;
-  // let randomStartIndex = Math.floor(Math.random() * allBoardBlocks.length);
+  
   let randomStartIndex = Math.floor(Math.random() * width * width);
 
   let startIndex = startId ? startId : randomStartIndex;
 
-  const { shipBlocks, valid, notTaken } = getValidity(
+  let { shipBlocks, valid, notTaken } = getValidity(
     allBoardBlocks,
     ship,
     isHorizontal,
@@ -133,12 +132,12 @@ ships.forEach((ship) => addShipPiece("computer", ship));
 
 let draggedShip;
 
-const optionsShips = Array.from(optionContainer.children);
+let optionsShips = Array.from(optionContainer.children);
 optionsShips.forEach((optionShip) =>
   optionShip.addEventListener("dragstart", dragStart)
 );
 
-const allPlayerBlocks = document.querySelectorAll("#player, div");
+let allPlayerBlocks = document.querySelectorAll("#player, div");
 allPlayerBlocks.forEach((playerBlock) => {
   playerBlock.addEventListener("dragover", dragOver);
   playerBlock.addEventListener("drop", dropShip);
@@ -152,13 +151,13 @@ function dragStart(e) {
 
 function dragOver(e) {
   e.preventDefault();
-  const ship = ships[draggedShip.id];
+  let ship = ships[draggedShip.id];
   highlightAreas(e.target.id, ship);
 }
 
 function dropShip(e) {
-  const startId = e.target.id;
-  const ship = ships[draggedShip.id];
+  let startId = e.target.id;
+  let ship = ships[draggedShip.id];
   addShipPiece("player", ship, startId);
   if (!notDropped) {
     draggedShip.remove();
@@ -168,9 +167,9 @@ function dropShip(e) {
 
 
 function highlightAreas(startIndex, ship) {
-  const allBoardBlocks = document.querySelectorAll("#player div");
+  let allBoardBlocks = document.querySelectorAll("#player div");
   let isHorizontal = angle === 0;
-  const { shipBlocks, valid, notTaken } = getValidity(
+  let { shipBlocks, valid, notTaken } = getValidity(
     allBoardBlocks,
     isHorizontal,
     startIndex,
@@ -190,11 +189,9 @@ let playerTurn;
 
 
 
-//-----< start game >-------->
+//-----< start game >--------------------------------------------------------->
 function startGame() {
-
   if (playerTurn === undefined) {
-
     if (optionContainer.children.length != 0) {
       infoDisplay.textContent = "Por favor coloca todas tus piezas en el tablero";
     } else {
@@ -219,32 +216,33 @@ let playerSunkShips = [];
 let computerSunkShips = [];
 
 
-
+//--------< user turn >------------------------------------>
 function handleClick(e) {
   if (!gameOver) {
     if (e.target.classList.contains("taken")) {
-      e.target.classList.add("boom");
-      infoDisplay.textContent = "Le diste a un barco de Computer!!!";
+        e.target.classList.add("boom");
+        infoDisplay.textContent = "Le diste a un barco de Computer!!!";
 
       let classes = Array.from(e.target.classList);
-      
-      
+    
       classes = classes.filter(className => className !== "block");
       classes = classes.filter(className => className !== "boom");
       classes = classes.filter(className => className !== "taken");
       playerHits.push(...classes);
+      
       console.log('playerHits', playerHits)
       checkScore("player", playerHits, playerSunkShips);
     }
-
+    
     if (!e.target.classList.contains("taken")) {
       infoDisplay.textContent = "No has acertado";
       e.target.classList.add("empty");
     }
+
     playerTurn = false;
-    const allBoardBlocks = document.querySelectorAll("#computer div");
-    allBoardBlocks.forEach((block) => block.replaceWith(block.cloneNode(true)));
-    setTimeout(computerGo, 3000);
+    let allBoardBlocks = document.querySelectorAll("#computer div");
+    allBoardBlocks.forEach(block => block.replaceWith(block.cloneNode(true)));
+    setTimeout(computerGo, 2000);
   }
 }
 
@@ -256,62 +254,63 @@ function computerGo() {
 
     setTimeout(() => {
       let randomGo = Math.floor(Math.random() * width * width);
-      const allBoardBlocks = document.querySelectorAll("#player div");
+      let allBoardBlocks = document.querySelectorAll("#player div");
 
-      if (
-        allBoardBlocks[randomGo].classList.contains("taken") &&
-        allBoardBlocks[randomGo].classList.contains("boom")
+      if (allBoardBlocks[randomGo].classList.contains("taken") &&
+          allBoardBlocks[randomGo].classList.contains("boom")
       ) {
         computerGo();
-        return;
+        return
       } else if (
         allBoardBlocks[randomGo].classList.contains("taken") &&
         !allBoardBlocks[randomGo].classList.contains("boom")
       ) {
         allBoardBlocks[randomGo].classList.add("boom");
-        infoDisplay.textContent = "Computer le ha dado a un barco!";
-        let classes = Array.from(allBoardBlocks[randomGo].classList);  
+        infoDisplay.textContent = "Computer golpeó tu  barco!";
+      
+        let classes = Array.from(allBoardBlocks[randomGo].classList)
         classes = classes.filter((className) => className !== "block");
         classes = classes.filter((className) => className !== "boom");
         classes = classes.filter((className) => className !== "taken");
         computerHits.push(...classes);
-        
+
+        console.log('computerHits', computerHits)
         checkScore("computer", computerHits, computerSunkShips)
       
       } else {
         infoDisplay.textContent = "Nada por ahora!"
         allBoardBlocks[randomGo].classList.add("empty");
       }
-    }, 1000);
+    }, 3000);
 
     setTimeout(() => {
       playerTurn = true;
       turnDisplay.textContent = "Es tu turno!";
-      turnDisplay.textContent = "Adelante!";
-      const allBoardBlocks = document.querySelectorAll("#computer div");
+      infoDisplay.textContent = "Adelante!";
+      let allBoardBlocks = document.querySelectorAll("#computer div");
       allBoardBlocks.forEach(block => block.addEventListener("click", handleClick)
       );
-    }, 3000);
+    }, 6000);
   }
 }
 
-//------< Check score user> ------------------------------->
+//------< Check user score > ------------------------------->
 function checkScore(user, userHits, userSunkShips) {
   function checkShip(shipName, shipLength) {
-    if (
+    if (  
       userHits.filter(storedShipName => storedShipName === shipName).length === shipLength
-    ) {
-      infoDisplay.textContent = `algo`
-    }
-    if (user === "player") {
-      infoDisplay.textContent = `Has hundido un ${shipName} de Computer`
-      playerHits = userHits.filter(storedShipName => storedShipName !== shipName);
-    }
-    if (user === "computer") {
-      infoDisplay.textContent = `Computer ha hundido un ${shipName} tuyo`
-      computerHits = userHits.filter(storedShipName => storedShipName !== shipName);
-    }
-    userSunkShips.push(shipName);
+      ) {
+          infoDisplay.textContent = `You sunk the ${user}´s ${shipName}` 
+          if (user === "player") {
+              infoDisplay.textContent = `Has hundido un ${shipName} de Computer`
+              playerHits = userHits.filter(storedShipName => storedShipName !== shipName);
+          }
+          if (user === "computer") {
+            infoDisplay.textContent = `Computer ha hundido un ${shipName} tuyo`
+            computerHits = userHits.filter(storedShipName => storedShipName !== shipName);
+          }
+          userSunkShips.push(shipName)
+        }
   }
 
   checkShip("destroyer", 2);

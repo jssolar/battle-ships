@@ -1,4 +1,11 @@
 
+html{
+  background-color: rgba(7, 35, 56, 0.964);
+  justify-content: center;
+  color: blueviolet;
+  display: flex;
+  font-family: 'Courier New', Courier, monospace;
+}
 #gamesboard-container{
   width: 500px;
   display: flex;
@@ -29,7 +36,7 @@
 .submarine{
   background-color: green;
 }
-.crusier{
+.cruiser{
   background-color: rebeccapurple;
 }
 .battleship{
@@ -53,7 +60,7 @@
   margin: 3px;
 }
 
-.crusier-preview {
+.cruiser-preview {
   width: 30px;
   height: 10px;
   margin: 3px;
@@ -81,13 +88,22 @@
 }
 
 .hover{
-  background-color: black;
+  background-color: rgb(133, 130, 130);
 }
+#computer .destroyer,
+#computer .submarine,
+#computer .cruiser,
+#computer .battleship,
+#computer .carrier {
+background-color: pink;
 
+
+
+}
 .boom{
-  background: red;
+  background: red !important;
 }
 
 .empty{
-  background-color: grey;
+  background-color: grey !important;
 }
